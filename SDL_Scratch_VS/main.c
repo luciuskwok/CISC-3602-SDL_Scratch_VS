@@ -17,8 +17,11 @@ uint32_t* color_buffer;
 // int window_width = 800;
 // int window_height = 600;
 
-#define WINDOW_WIDTH (800)
-#define WINDOW_HEIGHT (600)
+#define SCREEN_WIDTH (160)
+#define SCREEN_HEIGHT (100)
+#define WINDOW_SCALE (4)
+#define WINDOW_WIDTH (SCREEN_WIDTH * WINDOW_SCALE)
+#define WINDOW_HEIGHT (SCREEN_HEIGHT * WINDOW_SCALE)
 
 // Functions
 
@@ -47,19 +50,19 @@ bool initialize_windowing_system() {
 
 	// Texture
 	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, 
-		SDL_TEXTUREACCESS_STREAMING, WINDOW_WIDTH, WINDOW_HEIGHT);
+		SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 	if (!texture) {
 		fprintf(stderr, "SDL_CreateTexture() failed!\n");
 		return false;
 	}
 
 	// Allocate frame buffer
-	pixels = (uint32_t*)malloc(WINDOW_WIDTH * WINDOW_HEIGHT * sizeof(uint32_t));
+	pixels = (uint32_t*)malloc(SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(uint32_t));
 	if (!pixels) {
 		fprintf(stderr, "malloc() failed!\n");
 		return false;
 	} else {
-		for (int i = 0; i < WINDOW_WIDTH * WINDOW_HEIGHT; i++) {
+		for (int i = 0; i < SCREEN_WIDTH * SCREEN_HEIGHT; i++) {
 			pixels[i] = 0x000000FF;
 		}
 	}
@@ -104,11 +107,11 @@ void update_state() {
 
 void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 	// Update frame buffer
-	for (int x = 0; x < WINDOW_WIDTH; x++) {
-		pixels[*y * WINDOW_WIDTH + x] = colorPalette[*paletteIndex];
+	for (int x = 0; x < SCREEN_WIDTH; x += 2) {
+		pixels[*y * SCREEN_WIDTH + x] = colorPalette[*paletteIndex];
 	}
 	(*y)++;
-	if (*y >= WINDOW_HEIGHT) {
+	if (*y >= SCREEN_HEIGHT) {
 		*y = 0;
 		(*paletteIndex)++;
 		if (*paletteIndex >= 4) {
@@ -117,9 +120,11 @@ void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 	}
 
 	// Render frame buffer
-	SDL_UpdateTexture(texture, NULL, pixels, WINDOW_WIDTH * sizeof(uint32_t));
+	SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(uint32_t));
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0); // Use no interpolation
+	SDL_Rect destRect = { .x = 0, .y = 0, .w = WINDOW_WIDTH, .h = WINDOW_HEIGHT };
+	SDL_RenderCopy(renderer, texture, NULL, &destRect);
 	SDL_RenderPresent(renderer);
 }
 
