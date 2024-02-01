@@ -11,6 +11,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture;
 uint32_t* pixels;
+SDL_Rect rendererDestRect;
 
 bool is_running;
 uint32_t* color_buffer;
@@ -67,8 +68,15 @@ bool initialize_windowing_system() {
 		}
 	}
 
+	// Set up the renderer
+	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0); // Use no interpolation
+	rendererDestRect.x = 0;
+	rendererDestRect.y = 0;
+	rendererDestRect.w = WINDOW_WIDTH;
+	rendererDestRect.h = WINDOW_HEIGHT;
+	
 	// Clear the window
-	SDL_SetRenderDrawColor(renderer, 32, 32, 32, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
 
@@ -122,9 +130,7 @@ void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(uint32_t));
 	SDL_RenderClear(renderer);
-	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0); // Use no interpolation
-	SDL_Rect destRect = { .x = 0, .y = 0, .w = WINDOW_WIDTH, .h = WINDOW_HEIGHT };
-	SDL_RenderCopy(renderer, texture, NULL, &destRect);
+	SDL_RenderCopy(renderer, texture, NULL, &rendererDestRect);
 	SDL_RenderPresent(renderer);
 }
 
