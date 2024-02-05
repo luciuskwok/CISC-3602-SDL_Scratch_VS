@@ -6,6 +6,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "atari_font.h"
+
+
 // Globals
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -19,7 +22,7 @@ uint32_t* color_buffer;
 // int window_height = 600;
 
 #define SCREEN_WIDTH (160)
-#define SCREEN_HEIGHT (100)
+#define SCREEN_HEIGHT (96)
 #define WINDOW_SCALE (4)
 #define WINDOW_WIDTH (SCREEN_WIDTH * WINDOW_SCALE)
 #define WINDOW_HEIGHT (SCREEN_HEIGHT * WINDOW_SCALE)
