@@ -1,13 +1,21 @@
 // main.c
 //
 
+#include <stdlib.h>
 #include <stdio.h>
-#include <SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <SDL.h>
 
-#include "atari_font.h"
+#include "atari_renderer.h"
 
+
+// Constants
+#define SCREEN_WIDTH (160)
+#define SCREEN_HEIGHT (96)
+#define WINDOW_SCALE (4)
+#define WINDOW_WIDTH (SCREEN_WIDTH * WINDOW_SCALE)
+#define WINDOW_HEIGHT (SCREEN_HEIGHT * WINDOW_SCALE)
 
 // Globals
 SDL_Window* window;
@@ -17,15 +25,7 @@ uint32_t* pixels;
 SDL_Rect rendererDestRect;
 
 bool is_running;
-uint32_t* color_buffer;
-// int window_width = 800;
-// int window_height = 600;
 
-#define SCREEN_WIDTH (160)
-#define SCREEN_HEIGHT (96)
-#define WINDOW_SCALE (4)
-#define WINDOW_WIDTH (SCREEN_WIDTH * WINDOW_SCALE)
-#define WINDOW_HEIGHT (SCREEN_HEIGHT * WINDOW_SCALE)
 
 // Functions
 
@@ -118,7 +118,7 @@ void update_state() {
 
 void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 	// Update frame buffer
-	for (int x = 0; x < SCREEN_WIDTH; x += 2) {
+/*	for (int x = 0; x < SCREEN_WIDTH; x += 2) {
 		pixels[*y * SCREEN_WIDTH + x] = colorPalette[*paletteIndex];
 	}
 	(*y)++;
@@ -128,7 +128,9 @@ void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 		if (*paletteIndex >= 4) {
 			*paletteIndex = 0;
 		}
-	}
+	}*/
+
+	atari_renderer_render(pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(uint32_t));
@@ -141,6 +143,7 @@ int main(int argc, char* argv[]) {
     printf("Started program.\n");
 
 	if (!initialize_windowing_system()) return 0;
+	if (!atari_renderer_init()) return 0;
 
 	// Color palette
 	uint32_t colorPalette[4] = { 0xFF0000FF, 0xFFFF00FF, 0x00FF00FF, 0x0000FFFF };
@@ -158,6 +161,7 @@ int main(int argc, char* argv[]) {
 		SDL_Delay(1000 / 120);
 	}
 
+	atari_renderer_dispose();
     clean_up_windowing_system();
 
 	return 0;

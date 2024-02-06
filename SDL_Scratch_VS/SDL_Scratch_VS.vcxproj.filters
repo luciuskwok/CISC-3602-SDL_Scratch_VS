@@ -21,9 +21,15 @@
     <ClCompile Include="atari_font.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="atari_renderer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atari_font.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="atari_renderer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
