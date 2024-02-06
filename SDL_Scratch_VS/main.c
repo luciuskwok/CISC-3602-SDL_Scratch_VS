@@ -126,12 +126,13 @@ void run_render_pipeline() {
 	int ci = (frame_index / 30) % 7;
 	for (int y = 2; y < 24; y++) {
 		for (int x = 0; x < 40; x++) {
-			set_tile(x, y, (x + y * 13 + ti) % 128, (y) % 7 + 1);
+			atr_moveto(x, y);
+			atr_set_tile((x + y * 13 + ti) % 128, (y) % 7 + 1);
 			//set_tile(x, y, (x + y * 16) % 128, (y) % 7 + 1);
 		}
 	}
 
-	atari_renderer_render(pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
+	atr_render(pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(uint32_t));
@@ -150,7 +151,10 @@ int main(int argc, char* argv[]) {
 	if (!atari_renderer_init()) return 0;
 	
 	// Set up static part of display
-	print_to_screen(2, 0, "Hello, world!", 1);
+	atr_moveto(2, 0);
+	atr_print("Hello", 1);
+	atr_print(", ", 2);
+	atr_print("world!", 6);
 
 	// Game loop
 	is_running = true;
