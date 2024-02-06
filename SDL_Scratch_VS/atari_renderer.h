@@ -8,3 +8,6 @@ void set_tile(int x, int y, int tile, int color);
 int get_tile(int x, int y);
 int get_tile_color(int x, int y);
 
+int clear_screen(int tile, int color);
+int print_to_screen(int x, int y, const char* s, int color);
+

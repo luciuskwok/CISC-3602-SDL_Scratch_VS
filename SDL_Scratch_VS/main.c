@@ -124,9 +124,10 @@ void update_state() {
 void run_render_pipeline() {
 	int ti = (frame_index / 7) % 128;
 	int ci = (frame_index / 30) % 7;
-	for (int y = 0; y < 24; y++) {
+	for (int y = 2; y < 24; y++) {
 		for (int x = 0; x < 40; x++) {
 			set_tile(x, y, (x + y * 13 + ti) % 128, (y) % 7 + 1);
+			//set_tile(x, y, (x + y * 16) % 128, (y) % 7 + 1);
 		}
 	}
 
@@ -147,10 +148,9 @@ int main(int argc, char* argv[]) {
 
 	if (!initialize_windowing_system()) return 0;
 	if (!atari_renderer_init()) return 0;
-
-	// Color palette
-	uint32_t colorPalette[4] = { 0xFF0000FF, 0xFFFF00FF, 0x00FF00FF, 0x0000FFFF };
-	int paletteIndex = 0;
+	
+	// Set up static part of display
+	print_to_screen(2, 0, "Hello, world!", 1);
 
 	// Game loop
 	is_running = true;

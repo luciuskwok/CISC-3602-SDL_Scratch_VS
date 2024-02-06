@@ -31,7 +31,7 @@ bool atari_renderer_init() {
 	}
 
 	// Set memory to defaults
-	for (int i = 0; i < TILE_MAP_WIDTH * TILE_MAP_HEIGHT; i++) tile_map[i] = i % 128;
+	for (int i = 0; i < TILE_MAP_WIDTH * TILE_MAP_HEIGHT; i++) tile_map[i] = 0x20;
 	for (int i = 0; i < TILE_MAP_WIDTH * TILE_MAP_HEIGHT; i++) tile_color_map[i] = 1;
 
 	// Default colors in RGBA format
@@ -103,5 +103,21 @@ int get_tile_color(int x, int y) {
 	if (x < 0 || x >= TILE_MAP_WIDTH) return -1;
 	if (y < 0 || y >= TILE_MAP_HEIGHT) return  -1;
 	return tile_color_map[x + y * TILE_MAP_WIDTH];
+}
+
+int clear_screen(int tile, int color) {
+	for (int i = 0; i < TILE_MAP_WIDTH * TILE_MAP_HEIGHT; i++) {
+		tile_map[i] = tile;
+		tile_color_map[i] = color;
+	}
+}
+
+int print_to_screen(int x, int y, const char* s, int color) {
+	int i = 0;
+	while (s[i] != NULL && x < TILE_MAP_WIDTH) {
+		set_tile(x, y, s[i], color);
+		x++;
+		i++;
+	}
 }
 
