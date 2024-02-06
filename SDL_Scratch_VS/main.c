@@ -122,19 +122,6 @@ void update_state() {
 }
 
 void run_render_pipeline() {
-	// Update frame buffer
-/*	for (int x = 0; x < SCREEN_WIDTH; x += 2) {
-		pixels[*y * SCREEN_WIDTH + x] = colorPalette[*paletteIndex];
-	}
-	(*y)++;
-	if (*y >= SCREEN_HEIGHT) {
-		*y = 0;
-		(*paletteIndex)++;
-		if (*paletteIndex >= 4) {
-			*paletteIndex = 0;
-		}
-	}*/
-
 	int ti = (frame_index / 7) % 128;
 	int ci = (frame_index / 30) % 7;
 	for (int y = 0; y < 24; y++) {
