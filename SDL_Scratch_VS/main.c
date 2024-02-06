@@ -23,8 +23,10 @@ SDL_Renderer* renderer;
 SDL_Texture* texture;
 uint32_t* pixels;
 SDL_Rect rendererDestRect;
-
 bool is_running;
+
+// Global state for rendering
+uint32_t frame_index;
 
 
 // Functions
@@ -83,6 +85,9 @@ bool initialize_windowing_system() {
 	SDL_RenderClear(renderer);
 	SDL_RenderPresent(renderer);
 
+	// Reset the frame index
+	frame_index = 0;
+
 	return true;
 }
 
@@ -116,7 +121,7 @@ void update_state() {
 
 }
 
-void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
+void run_render_pipeline() {
 	// Update frame buffer
 /*	for (int x = 0; x < SCREEN_WIDTH; x += 2) {
 		pixels[*y * SCREEN_WIDTH + x] = colorPalette[*paletteIndex];
@@ -130,6 +135,14 @@ void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 		}
 	}*/
 
+	int ti = (frame_index / 7) % 128;
+	int ci = (frame_index / 30) % 7;
+	for (int y = 0; y < 24; y++) {
+		for (int x = 0; x < 40; x++) {
+			set_tile(x, y, (x + y * 13 + ti) % 128, (y) % 7 + 1);
+		}
+	}
+
 	atari_renderer_render(pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Render frame buffer
@@ -137,6 +150,9 @@ void run_render_pipeline(uint32_t* colorPalette, int* paletteIndex, int* y) {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, &rendererDestRect);
 	SDL_RenderPresent(renderer);
+
+	// Update frame index
+	frame_index++;
 }
 
 int main(int argc, char* argv[]) {
@@ -150,15 +166,14 @@ int main(int argc, char* argv[]) {
 	int paletteIndex = 0;
 
 	// Game loop
-	int y = 0;
 	is_running = true;
 	while (is_running) {
 		process_keyboard_input();
 		update_state();
-		run_render_pipeline(colorPalette, &paletteIndex, &y);
+		run_render_pipeline();
 
 		// Wait for 1/60 second = (1000 / 60)
-		SDL_Delay(1000 / 120);
+		SDL_Delay(1000 / 60);
 	}
 
 	atari_renderer_dispose();

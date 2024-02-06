@@ -11,6 +11,7 @@
 #define TILE_MAP_WIDTH (20)
 #define TILE_MAP_HEIGHT (12)
 #define COLOR_PALETTE_LEN (8)
+#define TILE_FONT_LEN (128)
 
 // Globals
 uint8_t* tile_map;
@@ -83,3 +84,24 @@ void atari_renderer_render(uint32_t* pixels, int pixel_width, int pixel_height) 
 		}
 	}
 }
+
+void set_tile(int x, int y, int tile, int color) {
+	if (x < 0 || x >= TILE_MAP_WIDTH) return;
+	if (y < 0 || y >= TILE_MAP_HEIGHT) return;
+	int index = x + y * TILE_MAP_WIDTH;
+	tile_map[index] = tile % TILE_FONT_LEN;
+	tile_color_map[index] = color % COLOR_PALETTE_LEN;
+}
+
+int get_tile(int x, int y) {
+	if (x < 0 || x >= TILE_MAP_WIDTH) return -1;
+	if (y < 0 || y >= TILE_MAP_HEIGHT) return  -1;
+	return tile_map[x + y * TILE_MAP_WIDTH];
+}
+
+int get_tile_color(int x, int y) {
+	if (x < 0 || x >= TILE_MAP_WIDTH) return -1;
+	if (y < 0 || y >= TILE_MAP_HEIGHT) return  -1;
+	return tile_color_map[x + y * TILE_MAP_WIDTH];
+}
+
