@@ -22,7 +22,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* texture;
 uint32_t* pixels;
-SDL_Rect rendererDestRect;
+SDL_Rect renderer_dest_rect;
 bool is_running;
 
 // Global state for rendering
@@ -75,10 +75,10 @@ bool initialize_windowing_system() {
 
 	// Set up the renderer
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, 0); // Use no interpolation
-	rendererDestRect.x = 0;
-	rendererDestRect.y = 0;
-	rendererDestRect.w = WINDOW_WIDTH;
-	rendererDestRect.h = WINDOW_HEIGHT;
+	renderer_dest_rect.x = 0;
+	renderer_dest_rect.y = 0;
+	renderer_dest_rect.w = WINDOW_WIDTH;
+	renderer_dest_rect.h = WINDOW_HEIGHT;
 	
 	// Clear the window
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -137,7 +137,7 @@ void run_render_pipeline() {
 	// Render frame buffer
 	SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(uint32_t));
 	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, &rendererDestRect);
+	SDL_RenderCopy(renderer, texture, NULL, &renderer_dest_rect);
 	SDL_RenderPresent(renderer);
 
 	// Update frame index
