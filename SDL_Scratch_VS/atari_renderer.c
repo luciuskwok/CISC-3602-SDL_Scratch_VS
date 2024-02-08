@@ -6,6 +6,8 @@
 #include <stdint.h>
 
 #include "atari_font.h"
+#include "tileset.h"
+
 
 // Constants
 #define TILE_MAP_WIDTH (20)
@@ -38,12 +40,12 @@ bool atari_renderer_init() {
 
 	// Default colors in RGBA format
 	color_palette[0] = 0x000000FF; // black
-	color_palette[1] = 0xFFFFFFFF; // white
-	color_palette[2] = 0xFF0000FF; // red
-	color_palette[3] = 0x00FF00FF; // green
-	color_palette[4] = 0x0000FFFF; // blue
-	color_palette[5] = 0xFFFF00FF; // yellow
-	color_palette[6] = 0x00FFFFFF; // cyan
+	color_palette[1] = 0xB0B0B0FF; // light gray
+	color_palette[2] = 0x404040FF; // dark gray
+	color_palette[3] = 0xB54D00FF; // light brown
+	color_palette[4] = 0x663931FF; // dark brown
+	color_palette[5] = 0xFFD887FF; // yellow
+	color_palette[6] = 0x005FF3FF; // blue
 	color_palette[7] = 0xFF00FFFF; // magenta
 
 	return true;
@@ -75,13 +77,21 @@ void atr_render(uint32_t* pixels, int pixel_width, int pixel_height) {
 			int color;
 
 			// Draw the tile
-			for (int cy = 0; cy < 8; cy++) {
-				int a = atari_font[(tile * 8 + cy) % atari_font_len];
-				for (int cx = 7; cx >= 0; cx--) {
-					color = (a & 0x01) ? fg_color : bg_color;
-					atr_set_pixel_to_color(pixels, pixel_width, pixel_height, tx * 8 + cx, ty * 8 + cy, color);
-					a = a >> 1;
+			if (tile < 128) {
+				// Use standard Atari font
+				for (int cy = 0; cy < 8; cy++) {
+					int a = atari_font[(tile * 8 + cy) % atari_font_len];
+					for (int cx = 7; cx >= 0; cx--) {
+						color = (a & 0x01) ? fg_color : bg_color;
+						atr_set_pixel_to_color(pixels, pixel_width, pixel_height, tx * 8 + cx, ty * 8 + cy, color);
+						a = a >> 1;
+					}
 				}
+			}
+			else {
+				// Use multi-color graphics tiles
+				tile = (tile - 128);
+
 			}
 		}
 	}

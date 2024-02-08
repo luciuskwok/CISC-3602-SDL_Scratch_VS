@@ -145,10 +145,12 @@
     <ClCompile Include="atari_font.c" />
     <ClCompile Include="atari_renderer.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="tileset.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="atari_font.h" />
     <ClInclude Include="atari_renderer.h" />
+    <ClInclude Include="tileset.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

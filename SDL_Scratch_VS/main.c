@@ -151,10 +151,13 @@ int main(int argc, char* argv[]) {
 	if (!atari_renderer_init()) return 0;
 	
 	// Set up static part of display
-	atr_moveto(2, 0);
-	atr_print("Hello", 1);
-	atr_print(", ", 2);
-	atr_print("world!", 6);
+	atr_moveto(0, 0);
+	atr_print("Moves", 1);
+	atr_print("123", 3);
+
+	atr_moveto(12, 0);
+	atr_print("Level", 1);
+	atr_print("001", 3);
 
 	// Game loop
 	is_running = true;
